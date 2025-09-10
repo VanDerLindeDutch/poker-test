@@ -1,6 +1,3 @@
-pub struct Tree {
-    head: Node,
-}
 
 struct Node {
     left: Option<Box<Node>>,
@@ -43,13 +40,13 @@ fn calculate_dfs(node: Option<Box<Node>>, buf: &mut [u64], height: u32) {
         }
     }
 }
-pub fn print(node: &Option<Box<Node>>, indent: String, isLeft: bool) {
+fn print(node: &Option<Box<Node>>, indent: String, is_left: bool) {
     if node.is_none() {
         return;
     }
     let node = node.as_ref().unwrap();
     println!("{}|___{}\n", indent, node.val);
-    let newStr = if isLeft {
+    let newStr = if is_left {
         indent + "|    "
     } else {
         indent + "   "

@@ -1,5 +1,5 @@
 use chrono::{TimeZone, Utc};
-use log::{error};
+use log::{error, info, set_logger};
 use std::sync::atomic::Ordering::SeqCst;
 use std::sync::atomic::AtomicI32;
 use std::sync::{Arc, Mutex};
@@ -15,6 +15,10 @@ struct SharedState {
     time: AtomicI32,
 }
 fn main() {
+    if std::env::var_os("RUST_LOG").is_none() {
+        unsafe { std::env::set_var("RUST_LOG", "info"); }
+    }
+    env_logger::init();
     let (host, port, user, password, database) = ("localhost", "5432", "postgres", "postgres", "poker_test");
     let shared_state = Arc::new(SharedState { time: AtomicI32::new(0) });
     let mut pg_client = repo::Client::new(&format!("postgresql://{}:{}@{}:{}/{}", user, password, host, port, database)).expect("error while creating pg client");
@@ -45,7 +49,7 @@ fn main() {
             match repo_cloned.lock().unwrap().get_last() {
                 Ok(v) => {
                     let time =  Utc.timestamp_opt(v as i64, 0).unwrap();
-                    println!("{}", time.format("%Y-%m-%d %H:%M:%S"));
+                    info!("{}", time.format("%Y-%m-%d %H:%M:%S"));
                 }
                 Err(err) => { error!("repo.get_last: {:?}", err) }
             }
