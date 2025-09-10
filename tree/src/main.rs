@@ -9,7 +9,7 @@ struct Node {
 }
 
 fn main() {
-    let height = 20;
+    let height = 2;
     let head = generate_tree_dfs(0, height);
     let mut buf = vec![0;height as usize + 1];
     calculate_dfs(Some(head), &mut buf, 0);
@@ -25,7 +25,7 @@ fn generate_tree_dfs(cur_i: u64, height: u32) -> Box<Node> {
             val: cur_i,
         });
     }
-    let size = 2u64.pow(height);
+    let size = 1u64 << (height);
     Box::new(Node {
         left: Some(generate_tree_dfs(cur_i + 1, height - 1)),
         right: Some(generate_tree_dfs(cur_i + size, height - 1)),
